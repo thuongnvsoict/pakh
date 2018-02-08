@@ -27,7 +27,6 @@ public class RequestService extends MasterService{
 			ps.setInt(3, 0);
 		else 
 			ps.setString(3, isHas);
-
 		
 		data = ps.executeQuery();
 		List<RequestType> list = new ArrayList<RequestType>();
@@ -45,7 +44,8 @@ public class RequestService extends MasterService{
 		
 	}
 	
-	public String postRequest(String req_title, String pro_dep_code, 
+	public String postRequest(String req_dep_code, String req_user,
+				String req_system_code, String req_title, String pro_dep_code, 
 				String req_content, String receiving_sms, 
 				String receiving_email, String fileDir, String req_status)
 			throws SQLException {
@@ -58,25 +58,29 @@ public class RequestService extends MasterService{
 			ticketID = rs.getString("NEXTVAL");
 		}
 		int data;
-		sql = "insert into request(ticketid, req_title, pro_dep_code,"
+		sql = "insert into request(ticketid, req_dep_code, req_user, req_system_code, "
+				+ "req_title, pro_dep_code,"
 				+ " req_content, receiving_sms, receiving_email, "
-				+ "file_Dir, req_status) values (?,?,?,?,?,?,?,?)";
+				+ "file_Dir, req_status) values (?,?,?,?,?,?,?,?,?,?,?)";
 		ps = connection.prepareStatement(sql);
 		
 		// Set parameter
 		ps.setString(1, ticketID);
-		ps.setString(2, req_title);
-		ps.setString(3, pro_dep_code);
-		ps.setString(4, req_content);
-		ps.setString(5, receiving_sms);
-		ps.setString(6, receiving_email);
+		ps.setString(2, req_dep_code);
+		ps.setString(3, req_user);
+		ps.setString(4, req_system_code);
+		ps.setString(5, req_title);
+		ps.setString(6, pro_dep_code);
+		ps.setString(7, req_content);
+		ps.setString(8, receiving_sms);
+		ps.setString(9, receiving_email);
 		if (fileDir.equals("null")) {
 			String temp = null;
-			ps.setString(7, temp);
+			ps.setString(10, temp);
 		}else {
-			ps.setString(7, fileDir);
+			ps.setString(10, fileDir);
 		}
-		ps.setString(8, req_status);
+		ps.setString(11, req_status);
 		
 		data = ps.executeUpdate();
 		if (data >= 1)
@@ -91,9 +95,9 @@ public class RequestService extends MasterService{
 			String pro_user, String ticketid, String req_status)
 						throws SQLException {
 		ResultSet data = null;
-		String sql = "select * from request where req_title like ? and req_system_code like ? and "
-				+ "req_dep_code like ? and req_user like ? and pro_dep_code like ? and "
-				+ "pro_user like ? and ticketid like ? and req_status like ?";
+		String sql = "select * from request where nvl(req_title,'x') like ? and nvl(req_system_code,'x') like ? and "
+				+ "nvl(req_dep_code,'x') like ? and nvl(req_user,'x') like ? and nvl(pro_dep_code,'x') like ? and "
+				+ "nvl(pro_user,'x') like ? and nvl(ticketid,'x') like ? and nvl(req_status,'x') like ?";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		// Set parameter
 
@@ -107,6 +111,7 @@ public class RequestService extends MasterService{
 		ps.setString(8, req_status);
 		
 		data = ps.executeQuery();
+		
 		List<Request> list = new ArrayList<Request>();
 		while (data.next()) {
 			Request req = new Request();
@@ -117,6 +122,7 @@ public class RequestService extends MasterService{
 			req.setReq_system_code(data.getString("req_system_code"));
 			req.setReq_type_id(data.getString("req_type_id"));
 			req.setReq_level(data.getString("req_level"));
+			req.setReq_title(data.getString("req_title"));
 			req.setReq_status(data.getString("req_status"));
 			
 //			req.setReq_date(data.getString("req_date"));
@@ -139,6 +145,22 @@ public class RequestService extends MasterService{
 			list.add(req);
 		}
 		return list;
+
+	}
+	
+	public int getNum(String status) throws SQLException {
+		ResultSet data;
+		String sql = "select * from request where req_status = ?";
+		PreparedStatement ps = connection.prepareStatement(sql);
+		// Set parameter
+		ps.setString(1, status);
+		
+		data = ps.executeQuery();
+		int count = 0;
+		while (data.next()) {
+			count++;
+		}
+		return count;
 
 	}
 	

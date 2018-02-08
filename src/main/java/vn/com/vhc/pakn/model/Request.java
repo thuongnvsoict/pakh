@@ -8,6 +8,7 @@ public class Request {
 	private String req_system_code;
 	private String req_type_id;
 	private String req_level;
+	private String req_title;
 	private String req_status;
 	private String req_date;  // Notice
 	private String pro_dep_code;
@@ -25,6 +26,14 @@ public class Request {
 	
 	
 	
+	public String getReq_title() {
+		return req_title;
+	}
+
+	public void setReq_title(String req_title) {
+		this.req_title = req_title;
+	}
+
 	public Request() {
 		super();
 	}
