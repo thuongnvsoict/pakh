@@ -1,0 +1,5 @@
+address: 14.160.91.174
+port: 1521
+sid: vhc
+userdb: vhc_cntt
+password: cntt123
