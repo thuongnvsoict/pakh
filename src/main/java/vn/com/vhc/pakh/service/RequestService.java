@@ -66,16 +66,28 @@ public class RequestService extends MasterService{
 		
 		// Set parameter
 		ps.setString(1, ticketID);
-		ps.setString(2, req_dep_code);
-		ps.setString(3, req_user);
-		ps.setString(4, req_system_code);
+		// set value nullable
+		String temp = null;
+		if (req_dep_code.equals("null"))
+			ps.setString(2, temp);
+		else 
+			ps.setString(2, req_dep_code);
+		if (req_user.equals("null"))
+			ps.setString(3, temp);
+		else
+			ps.setString(3, req_user);
+		
+		if (req_system_code.equals("null"))
+			ps.setString(4, temp);
+		else
+			ps.setString(4, req_system_code);
+		//11
 		ps.setString(5, req_title);
 		ps.setString(6, pro_dep_code);
 		ps.setString(7, req_content);
 		ps.setString(8, receiving_sms);
 		ps.setString(9, receiving_email);
 		if (fileDir.equals("null")) {
-			String temp = null;
 			ps.setString(10, temp);
 		}else {
 			ps.setString(10, fileDir);
@@ -92,15 +104,19 @@ public class RequestService extends MasterService{
 	
 	public List<Request> getRequest(String req_title, String req_system_code,
 			String req_dep_code, String req_user, String pro_dep_code,
-			String pro_user, String ticketid, String req_status)
+			String pro_user, String ticketid, String req_status, 
+			String start_req_date, String end_req_date)
 						throws SQLException {
 		ResultSet data = null;
 		String sql = "select * from request where nvl(req_title,'x') like ? and nvl(req_system_code,'x') like ? and "
 				+ "nvl(req_dep_code,'x') like ? and nvl(req_user,'x') like ? and nvl(pro_dep_code,'x') like ? and "
-				+ "nvl(pro_user,'x') like ? and nvl(ticketid,'x') like ? and nvl(req_status,'x') like ?";
+				+ "nvl(pro_user,'x') like ? and nvl(ticketid,'x') like ? and nvl(req_status,'x') like ? "
+				+ "and REQ_DATE >= to_date(?,'dd-MM-yyyy')"  
+				+ "and REQ_DATE <= to_date(?,'dd-MM-yyyy')";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		// Set parameter
-
+		System.out.println(start_req_date);
+		System.out.println(end_req_date);
 		ps.setString(1, req_title);
 		ps.setString(2, req_system_code);
 		ps.setString(3, req_dep_code);
@@ -109,7 +125,8 @@ public class RequestService extends MasterService{
 		ps.setString(6, pro_user);
 		ps.setString(7, ticketid);
 		ps.setString(8, req_status);
-		
+		ps.setString(9, start_req_date);
+		ps.setString(10, end_req_date);
 		data = ps.executeQuery();
 		
 		List<Request> list = new ArrayList<Request>();
@@ -134,7 +151,7 @@ public class RequestService extends MasterService{
 //			req.setPro_assginment_date(data.getString("pro_assginment_date"));
 //			req.setPro_plan(data.getString("pro_plan"));
 //			req.setPro_actua(data.getString("pro_actua"));
-			
+//			
 			req.setReceiving_email(data.getString("receiving_email"));
 			req.setReceiving_sms(data.getString("receiving_sms"));
 			req.setReq_content(data.getString("req_content"));

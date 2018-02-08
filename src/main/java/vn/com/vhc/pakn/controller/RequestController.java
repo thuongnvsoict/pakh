@@ -27,9 +27,9 @@ public class RequestController {
 
 	@RequestMapping(value = "/post", method = RequestMethod.POST)
 	public String postRequest(
-			@RequestParam("req_dep_code") String req_dep_code,
-			@RequestParam("req_user") String req_user,
-			@RequestParam("req_system_code") String req_system_code,
+			@RequestParam(value = "req_dep_code", required = false, defaultValue="null") String req_dep_code,
+			@RequestParam(value = "req_user", required = false, defaultValue="null") String req_user,
+			@RequestParam(value = "req_system_code", required = false, defaultValue="null") String req_system_code,
 			@RequestParam("req_title") String req_title,
 			@RequestParam("pro_dep_code") String pro_dep_code,
 			@RequestParam("req_content") String req_content,
@@ -48,12 +48,14 @@ public class RequestController {
 			@RequestParam(value = "req_user", required = false, defaultValue="%%") String req_user,
 			@RequestParam(value = "pro_dep_code", required = false, defaultValue="%%") String pro_dep_code,
 			@RequestParam(value = "pro_user", required = false, defaultValue="%%") String pro_user,
-			//Ngay gui yeu cau
+			
 			@RequestParam(value = "ticketid", required = false, defaultValue="%%") String ticketid,
-			@RequestParam(value = "req_status", required = false, defaultValue="%%") String req_status
+			@RequestParam(value = "req_status", required = false, defaultValue="%%") String req_status,
+			//Ngay gui yeu cau
+			@RequestParam(value = "start_req_date", required = false, defaultValue="%%") String start_req_date,
+			@RequestParam(value = "end_req_date", required = false, defaultValue="%%") String end_req_date
 			) throws Exception {
-		System.out.println("helo"+ pro_dep_code);
-		return service.getRequest(req_title, req_system_code, req_dep_code, req_user, pro_dep_code, pro_user, ticketid, req_status);
+		return service.getRequest(req_title, req_system_code, req_dep_code, req_user, pro_dep_code, pro_user, ticketid, req_status, start_req_date, end_req_date);
 	}
 	
 	@RequestMapping(value = "/num/{req_status}", method = RequestMethod.GET)
