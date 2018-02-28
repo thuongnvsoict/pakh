@@ -13,7 +13,7 @@ import vn.com.vhc.pakn.model.Department;
 public class DepartmentService extends MasterService{
 	public List<Department> getDepartment() throws SQLException{
 		ResultSet data = null;
-		String sql = "select * from department";
+		String sql = "select * from phong_ban";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		// Set parameter
 

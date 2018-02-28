@@ -14,9 +14,9 @@ public class UserService extends MasterService{
 	
 	public User getUserInfo(String username) throws SQLException{
 		ResultSet data = null;
-		String sql = "select * from sys_users where username = ?";
+		String sql = "select * from users where upper(username) = ?";
 		PreparedStatement ps = connection.prepareStatement(sql);
-		ps.setString(1, username);
+		ps.setString(1, username.toUpperCase());
 		data = ps.executeQuery();
 		
 		if(data.next()){
@@ -40,7 +40,7 @@ public class UserService extends MasterService{
 	
 	public List<User> getStaffDepartment(String dep_code) throws SQLException{
 		ResultSet data = null;
-		String sql = "select * from sys_users where MA_PHONG = ?";
+		String sql = "select * from users where MA_PHONG = ?";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setString(1, dep_code);
 		data = ps.executeQuery();

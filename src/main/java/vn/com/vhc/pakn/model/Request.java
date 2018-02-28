@@ -1,5 +1,7 @@
 package vn.com.vhc.pakn.model;
 
+import java.sql.Date;
+
 public class Request {
 	private String id;
 	private String ticket_id;
@@ -10,13 +12,13 @@ public class Request {
 	private String req_level;
 	private String req_title;
 	private String req_status;
-	private String req_date;  // Notice
+	private Date req_date;  // Notice
 	private String pro_dep_code;
 	private String pro_user;
 	private String pro_content;
-	private String pro_assginment_date;// Notice
-	private String pro_plan; // Notice
-	private String pro_actua; // Notice
+	private Date pro_assginment_date;// Notice
+	private Date pro_plan; // Notice
+	private Date pro_actua; // Notice
 	private String receiving_sms;
 	private String receiving_email;
 	private String req_content;
@@ -86,10 +88,10 @@ public class Request {
 	public void setReq_status(String req_status) {
 		this.req_status = req_status;
 	}
-	public String getReq_date() {
+	public Date getReq_date() {
 		return req_date;
 	}
-	public void setReq_date(String req_date) {
+	public void setReq_date(Date req_date) {
 		this.req_date = req_date;
 	}
 	public String getPro_dep_code() {
@@ -110,22 +112,22 @@ public class Request {
 	public void setPro_content(String pro_content) {
 		this.pro_content = pro_content;
 	}
-	public String getPro_assginment_date() {
+	public Date getPro_assginment_date() {
 		return pro_assginment_date;
 	}
-	public void setPro_assginment_date(String pro_assginment_date) {
+	public void setPro_assginment_date(Date pro_assginment_date) {
 		this.pro_assginment_date = pro_assginment_date;
 	}
-	public String getPro_plan() {
+	public Date getPro_plan() {
 		return pro_plan;
 	}
-	public void setPro_plan(String pro_plan) {
+	public void setPro_plan(Date pro_plan) {
 		this.pro_plan = pro_plan;
 	}
-	public String getPro_actua() {
+	public Date getPro_actua() {
 		return pro_actua;
 	}
-	public void setPro_actua(String pro_actua) {
+	public void setPro_actua(Date pro_actua) {
 		this.pro_actua = pro_actua;
 	}
 	public String getReceiving_sms() {

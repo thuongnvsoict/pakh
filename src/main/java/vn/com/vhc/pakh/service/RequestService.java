@@ -115,8 +115,6 @@ public class RequestService extends MasterService{
 				+ "and REQ_DATE <= to_date(?,'dd-MM-yyyy')";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		// Set parameter
-		System.out.println(start_req_date);
-		System.out.println(end_req_date);
 		ps.setString(1, req_title);
 		ps.setString(2, req_system_code);
 		ps.setString(3, req_dep_code);
@@ -142,15 +140,14 @@ public class RequestService extends MasterService{
 			req.setReq_title(data.getString("req_title"));
 			req.setReq_status(data.getString("req_status"));
 			
-//			req.setReq_date(data.getString("req_date"));
+			req.setReq_date(data.getDate("req_date"));
 			
 			req.setPro_dep_code(data.getString("pro_dep_code"));
 			req.setPro_user(data.getString("pro_user"));
 			req.setPro_content(data.getString("pro_content"));
 			
-//			req.setPro_assginment_date(data.getString("pro_assginment_date"));
-//			req.setPro_plan(data.getString("pro_plan"));
-//			req.setPro_actua(data.getString("pro_actua"));
+			req.setPro_plan(data.getDate("pro_plan"));
+			req.setPro_actua(data.getDate("pro_actua"));
 //			
 			req.setReceiving_email(data.getString("receiving_email"));
 			req.setReceiving_sms(data.getString("receiving_sms"));
