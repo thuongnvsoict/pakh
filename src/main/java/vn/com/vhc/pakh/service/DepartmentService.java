@@ -22,8 +22,8 @@ public class DepartmentService extends MasterService{
 		while (data.next()) {
 			Department dep = new Department();
 			dep.setId(data.getString("ID"));
-			dep.setDepartmentCode(data.getString("DEP_CODE"));
-			dep.setDepartmentName(data.getString("DEP_NAME"));
+			dep.setDepartmentCode(data.getString("MA_PHONG"));
+			dep.setDepartmentName(data.getString("TEN_PHONG"));
 			list.add(dep);
 		}
 		return list;

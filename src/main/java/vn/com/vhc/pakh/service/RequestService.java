@@ -115,14 +115,14 @@ public class RequestService extends MasterService{
 				+ "and REQ_DATE <= to_date(?,'dd-MM-yyyy')";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		// Set parameter
-		ps.setString(1, req_title);
-		ps.setString(2, req_system_code);
-		ps.setString(3, req_dep_code);
-		ps.setString(4, req_user);
-		ps.setString(5, pro_dep_code);
-		ps.setString(6, pro_user);
-		ps.setString(7, ticketid);
-		ps.setString(8, req_status);
+		ps.setString(1, "%"+req_title+"%");
+		ps.setString(2, "%"+req_system_code+"%");
+		ps.setString(3, "%"+req_dep_code+"%");
+		ps.setString(4, "%"+req_user+"%");
+		ps.setString(5, "%"+pro_dep_code+"%");
+		ps.setString(6, "%"+pro_user+"%");
+		ps.setString(7, "%"+ticketid+"%");
+		ps.setString(8, "%"+req_status+"%");
 		ps.setString(9, start_req_date);
 		ps.setString(10, end_req_date);
 		data = ps.executeQuery();
