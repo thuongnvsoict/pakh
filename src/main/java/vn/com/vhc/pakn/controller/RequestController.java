@@ -10,19 +10,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import vn.com.vhc.pakh.service.RequestService;
 import vn.com.vhc.pakn.model.Request;
+import vn.com.vhc.pakn.model.RequestDetail;
 import vn.com.vhc.pakn.model.RequestType;
 
 @RestController
 @RequestMapping("/request")
 public class RequestController {
+	
 	RequestService service = new RequestService();
 	
-	@RequestMapping(value = "/{departmentCode}/{systemCode}/{isHas}", method = RequestMethod.GET)
-	public List<RequestType> getRequestTypes(@PathVariable("departmentCode") String departmentCode,
-				@PathVariable("systemCode") String systemCode,
-				@PathVariable("isHas") String isHas
+	@RequestMapping(value = "/type", method = RequestMethod.GET)
+	public List<RequestType> getRequestTypes(
+			@RequestParam(value = "departmentCode", required = false, defaultValue="null") String departmentCode,
+			@RequestParam(value = "systemCode", required = false, defaultValue="null") String systemCode,
+			@RequestParam(value = "isHas", required = false, defaultValue="null") String isHas,
+			@RequestParam(value = "username", required = false, defaultValue="null") String username
 			) throws Exception {
-		return service.getRequestTypes(departmentCode, systemCode, isHas);
+		return service.getRequestTypes(departmentCode, systemCode, isHas, username);
 	}
 
 	@RequestMapping(value = "/post", method = RequestMethod.POST)
@@ -39,6 +43,26 @@ public class RequestController {
 			@RequestParam("req_status") String req_status
 			) throws Exception {
 		return service.postRequest(req_dep_code, req_user, req_system_code, req_title, pro_dep_code, req_content, receiving_sms, receiving_email, fileDir, req_status);
+	}
+	
+	@RequestMapping(value = "/response", method = RequestMethod.POST)
+	public String responseRequest(
+			@RequestParam(value = "ticketid", required = false, defaultValue="null") String ticketid,
+			@RequestParam(value = "fw_dep_code", required = false, defaultValue="null") String fw_dep_code,
+			@RequestParam(value = "fw_user", required = false, defaultValue="null") String fw_user,
+			@RequestParam(value = "fw_date", required = false, defaultValue="null") String fw_date,
+			@RequestParam(value = "fw_content", required = false, defaultValue="null") String fw_content,
+			@RequestParam(value = "receiving_date", required = false, defaultValue="null") String receiving_date,
+			@RequestParam(value = "receiving_dep_code", required = false, defaultValue="null") String receiving_dep_code,
+			@RequestParam(value = "receiving_user", required = false, defaultValue="null") String receiving_user,
+			@RequestParam(value = "dateline", required = false, defaultValue="null") String dateline,
+			@RequestParam(value = "actualy_finish", required = false, defaultValue="null") String actualy_finish,
+			@RequestParam(value = "return_content", required = false, defaultValue="null") String return_content,
+			@RequestParam(value = "return_content_private", required = false, defaultValue="null") String return_content_private,
+			@RequestParam(value = "dic_cause_id", required = false, defaultValue="null") String dic_cause_id,
+			@RequestParam(value = "dic_cause_id_private", required = false, defaultValue="null") String dic_cause_id_private,
+			@RequestParam(value = "file_id", required = false, defaultValue="null") String file_id) throws Exception {
+		return service.responseRequest(ticketid, fw_dep_code, fw_user, fw_date, fw_content, receiving_date, receiving_dep_code, receiving_user, dateline, actualy_finish,return_content,return_content_private,dic_cause_id,dic_cause_id_private,file_id);
 	}
 	
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
@@ -61,5 +85,37 @@ public class RequestController {
 	@RequestMapping(value = "/num/{req_status}", method = RequestMethod.GET)
 	public int getNum(@PathVariable("req_status") String req_status) throws SQLException {
 		return service.getNum(req_status);
+	}
+	
+	@RequestMapping(value = "/recent/{ticketid}", method = RequestMethod.GET)
+	public RequestDetail getRecentRequestDetail(@PathVariable("ticketid") String ticketid) throws SQLException {
+		return service.getRecentRequestDetail(ticketid);
+	}
+	
+	// API 14
+	@RequestMapping(value = "/updateRequest/{ticketid}", method = RequestMethod.PUT)
+	public String updateRequest(@PathVariable("ticketid") String ticketid,
+			@RequestParam(value = "pro_actua", required = true) String pro_actua,
+			@RequestParam(value = "pro_content", required = true) String pro_content,
+			@RequestParam(value = "pro_user", required = true) String pro_user,
+			@RequestParam(value = "pro_dep_code", required = true) String pro_dep_code
+			) throws SQLException {
+		return service.updateRequest(ticketid,pro_actua,pro_content,pro_user,pro_dep_code);
+		//return temp;
+	}
+	
+	// API 15
+	@RequestMapping(value = "/updateRequestDetail/{id}", method = RequestMethod.PUT)
+	public String updateRequestDetail(@PathVariable("id") String id,
+			@RequestParam(value = "receiving_date", required = false, defaultValue="null") String receiving_date,
+			@RequestParam(value = "receiving_dep_code", required = false, defaultValue="null") String receiving_dep_code,
+			@RequestParam(value = "receiving_user", required = false, defaultValue="null") String receiving_user,
+			@RequestParam(value = "actualy_finish", required = false, defaultValue="null") String actualy_finish,
+			@RequestParam(value = "return_content", required = false, defaultValue="null") String return_content,
+			@RequestParam(value = "return_content_private", required = false, defaultValue="null") String return_content_private,
+			@RequestParam(value = "dic_cause_id", required = false, defaultValue="null") String dic_cause_id,
+			@RequestParam(value = "dic_cause_id_private", required = false, defaultValue="null") String dic_cause_id_private,
+			@RequestParam(value = "file_id", required = false, defaultValue="null") String file_id) throws SQLException {
+		return service.updateRequestDetail(id, receiving_date, receiving_dep_code, receiving_user, actualy_finish, return_content, return_content_private, dic_cause_id, dic_cause_id_private, file_id);
 	}
 }
