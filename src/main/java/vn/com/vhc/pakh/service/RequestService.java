@@ -131,11 +131,13 @@ public class RequestService extends MasterService {
 			ticketID = rs.getString("NEXTVAL");
 		}
 		int data;
+		//fw_date = sysdate;
+		//dateline = sysdate + 8/24;
 		sql = "insert into request_detail(ticketid, fw_dep_code, fw_user, fw_date, "
 				+ "fw_content, receiving_date, receiving_dep_code, "
 				+ "receiving_user, dateline, actualy_finish,return_content,"
 				+ "return_content_private,dic_cause_id,dic_cause_id_private,"
-				+ "file_id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "file_id) values (?,?,?,sysdate,?,?,?,?,sysdate + 8/24,?,?,?,?,?,?)";
 		ps = connection.prepareStatement(sql);
 		// Set parameter
 		ps.setString(1, ticketID);
@@ -151,65 +153,65 @@ public class RequestService extends MasterService {
 		else
 			ps.setString(3, fw_user);
 		// --------------------------------DATE
-		if (fw_date.equals("null"))
-			ps.setString(4, temp);
-		else
-			ps.setDate(4, Date.valueOf(fw_date));
+//		if (fw_date.equals("null"))
+//			ps.setString(4, temp);
+//		else
+//			ps.setDate(4, Date.valueOf(fw_date));
 		// --------------------------------
 		if (fw_content.equals("null"))
-			ps.setString(5, temp);
+			ps.setString(4, temp);
 		else
-			ps.setString(5, fw_content);
+			ps.setString(4, fw_content);
 		// --------------------------------DATE
 		if (receiving_date.equals("null"))
-			ps.setString(6, temp);
+			ps.setString(5, temp);
 		else
-			ps.setDate(6, Date.valueOf(receiving_date));
+			ps.setDate(5, Date.valueOf(receiving_date));
 		// --------------------------------
 		if (receiving_dep_code.equals("null"))
-			ps.setString(7, temp);
+			ps.setString(6, temp);
 		else
-			ps.setString(7, receiving_dep_code);
+			ps.setString(6, receiving_dep_code);
 		// --------------------------------
 		if (receiving_user.equals("null"))
-			ps.setString(8, temp);
+			ps.setString(7, temp);
 		else
-			ps.setString(8, receiving_user);
+			ps.setString(7, receiving_user);
 		// --------------------------------DATE
-		if (dateline.equals("null"))
-			ps.setString(9, temp);
-		else
-			ps.setDate(9, Date.valueOf(dateline));
+//		if (dateline.equals("null"))
+//			ps.setString(9, temp);
+//		else
+//			ps.setDate(9, Date.valueOf(dateline));
 		// --------------------------------DATE
 		if (actualy_finish.equals("null"))
-			ps.setString(10, temp);
+			ps.setString(8, temp);
 		else
-			ps.setDate(10, Date.valueOf(actualy_finish));
+			ps.setDate(8, Date.valueOf(actualy_finish));
 		// --------------------------------
 		if (return_content.equals("null"))
-			ps.setString(11, temp);
+			ps.setString(9, temp);
 		else
-			ps.setString(11, return_content);
+			ps.setString(9, return_content);
 		// --------------------------------
 		if (return_content_private.equals("null"))
-			ps.setString(12, temp);
+			ps.setString(10, temp);
 		else
-			ps.setString(12, return_content_private);
+			ps.setString(10, return_content_private);
 		// --------------------------------
 		if (dic_cause_id.equals("null"))
-			ps.setString(13, temp);
+			ps.setString(11, temp);
 		else
-			ps.setString(13, dic_cause_id);
+			ps.setString(11, dic_cause_id);
 		// --------------------------------
 		if (dic_cause_id_private.equals("null"))
-			ps.setString(14, temp);
+			ps.setString(12, temp);
 		else
-			ps.setString(14, dic_cause_id_private);
+			ps.setString(12, dic_cause_id_private);
 		// --------------------------------
 		if (file_id.equals("null"))
-			ps.setString(15, temp);
+			ps.setString(13, temp);
 		else
-			ps.setString(15, file_id);
+			ps.setString(13, file_id);
 
 		// Execute Update
 		data = ps.executeUpdate();
