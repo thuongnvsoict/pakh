@@ -20,6 +20,8 @@ import javax.naming.ldap.LdapContext;
 import org.apache.log4j.Logger;
 
 import org.springframework.stereotype.Service;
+
+import vn.com.vhc.pakn.LDAP;
 import vn.com.vhc.pakn.model.User;
 
 @Service
@@ -96,10 +98,13 @@ public class UserService extends MasterService{
 			user.setPosition(data.getString("position"));
 			user.setIsEnable(data.getString("is_enable"));
 			user.setDepartmentCode(data.getString("MA_PHONG"));
+			
 			if (user.getPassword().equals(passwordMD5)) {
 				return user;
 			}else {
-				boolean existUser = new LDAP().authentication(username, password);
+				System.out.println("This is LDAP password");
+				boolean existUser = LDAP.authentication(username, password);
+				System.out.println(existUser);
 				//boolean existUser = true;
 				System.out.println(existUser);
 				if (existUser == true) {
@@ -123,11 +128,11 @@ public class UserService extends MasterService{
 		for (int i = 0; i < byteData.length; i++) {
 			sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
 		}
-	
+		
 		return sb.toString();
 	}
 }
-
+/*
 class LDAP {
 	public static String authMethod 	= "simple";
 	public static String ldapVersion 	= "3";
@@ -183,7 +188,7 @@ class LDAP {
         return null;
     }
 	
-	public boolean authentication(String strUser, String strPass) throws NamingException{
+	public static boolean authentication(String strUser, String strPass) throws NamingException{
         LDAP ldap = new LDAP();
         Attributes att = ldap.authenticateUser(strUser, strPass);
         if (att != null){
@@ -192,5 +197,5 @@ class LDAP {
         return false;
     }
 }
-
+*/
 

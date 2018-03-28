@@ -13,18 +13,21 @@ import javax.naming.ldap.LdapContext;
 
 import org.apache.log4j.Logger;
 
-
 public class LDAP {
+
 	public static String authMethod 	= "simple";
 	public static String ldapVersion 	= "3";
 	//public static String ldapHost 		= "10.151.6.248";
 	public static String ldapHost 		= "10.3.12.57";
 	public static String ldapPort 		= "389";
+
 	private static Logger logger = Logger.getLogger(LDAP.class);
+	
 	private static String ATTRIBUTE_FOR_USER = "sAMAccountName";
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Attributes authenticateUser(String username, String password){
+	public Attributes authenticateUser(String username, String password)
+    {
         if(username==null||"".equals(username.trim())||password==null||"".equals(password.trim()))
             return null;            
 
@@ -45,7 +48,8 @@ public class LDAP {
         environment.put(Context.SECURITY_PRINCIPAL, username);
         environment.put(Context.SECURITY_CREDENTIALS, password);
         LdapContext ctxGC = null;
-        try{	
+        try
+        {	
         	logger.info("Connecting to host " + ldapHost + " at port " + ldapPort + "...");
             ctxGC = new InitialLdapContext(environment, null);
             // Search for objects in the GC using the filter
@@ -60,7 +64,8 @@ public class LDAP {
                 }
             }
         }
-        catch (NamingException e){
+        catch (NamingException e)
+        {
         	logger.error("LDAP authentication failed: " + e.toString());
         	System.out.println("LDAP authentication failed: " + e.toString());
         	System.out.println("LDAP authentication failed: " + e.getMessage());
@@ -69,15 +74,19 @@ public class LDAP {
         return null;
     }
 	
-	public static boolean authentication(String strUser, String strPass) throws NamingException{
+	public static boolean authentication(String strUser, String strPass) throws NamingException
+    {
         LDAP ldap = new LDAP();
         Attributes att = ldap.authenticateUser(strUser, strPass);
-        if (att != null){
+        if (att != null)
+        {
             return true;
         }
         return false;
     }
-	public static void main(String[] args) throws NamingException {
-		//System.out.println(authentication("hong.nt", "mobifone@2017"));
+	
+	public static void main(String arg[]) throws NamingException {
+		System.out.println(authentication("pakh.tctk", "ktdh12345"));
+		//System.out.println(authentication("HONG.NT", "mobifone@2017"));
 	}
 }
