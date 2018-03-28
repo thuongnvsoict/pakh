@@ -103,10 +103,7 @@ public class UserService extends MasterService{
 				return user;
 			}else {
 				System.out.println("This is LDAP password");
-				boolean existUser = LDAP.authentication(username, password);
-				System.out.println(existUser);
-				//boolean existUser = true;
-				System.out.println(existUser);
+				boolean existUser = LDAP.authentication(username+"@mobifone.vn", password);
 				if (existUser == true) {
 					return user;
 				}else {
