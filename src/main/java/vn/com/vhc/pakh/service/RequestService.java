@@ -118,29 +118,23 @@ public class RequestService extends MasterService {
 
 	}
 
-	public String responseRequest(String ticketid, String fw_dep_code, String fw_user, String fw_date,
-			String fw_content, String receiving_date, String receiving_dep_code, String receiving_user, String dateline,
+	public String responseRequest(String ticketid, String fw_dep_code, String fw_user, 
+			String fw_content, String receiving_date, String receiving_dep_code, String receiving_user,
 			String actualy_finish, String return_content, String return_content_private, String dic_cause_id,
 			String dic_cause_id_private, String file_id) throws SQLException {
-		// Get ticketID
-		String ticketID = "";
-		String sql = "select REQUEST_SEQ.nextval from dual";
-		PreparedStatement ps = connection.prepareStatement(sql);
-		ResultSet rs = ps.executeQuery();
-		if (rs.next()) {
-			ticketID = rs.getString("NEXTVAL");
-		}
-		int data;
-		//fw_date = sysdate;
-		//dateline = sysdate + 8/24;
-		sql = "insert into request_detail(ticketid, fw_dep_code, fw_user, fw_date, "
+		
+		String sql = "insert into request_detail(ticketid, fw_dep_code, fw_user, fw_date, "
 				+ "fw_content, receiving_date, receiving_dep_code, "
 				+ "receiving_user, dateline, actualy_finish,return_content,"
 				+ "return_content_private,dic_cause_id,dic_cause_id_private,"
 				+ "file_id) values (?,?,?,sysdate,?,?,?,?,sysdate + 8/24,?,?,?,?,?,?)";
+		PreparedStatement ps = connection.prepareStatement(sql);
+		int data;
+		//fw_date = sysdate;
+		//dateline = sysdate + 8/24;
 		ps = connection.prepareStatement(sql);
 		// Set parameter
-		ps.setString(1, ticketID);
+		ps.setString(1, ticketid);
 		// set value nullable
 		String temp = null;
 		if (fw_dep_code.equals("null"))

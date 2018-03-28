@@ -50,19 +50,17 @@ public class RequestController {
 			@RequestParam(value = "ticketid", required = false, defaultValue="null") String ticketid,
 			@RequestParam(value = "fw_dep_code", required = false, defaultValue="null") String fw_dep_code,
 			@RequestParam(value = "fw_user", required = false, defaultValue="null") String fw_user,
-			@RequestParam(value = "fw_date", required = false, defaultValue="null") String fw_date,
 			@RequestParam(value = "fw_content", required = false, defaultValue="null") String fw_content,
 			@RequestParam(value = "receiving_date", required = false, defaultValue="null") String receiving_date,
 			@RequestParam(value = "receiving_dep_code", required = false, defaultValue="null") String receiving_dep_code,
 			@RequestParam(value = "receiving_user", required = false, defaultValue="null") String receiving_user,
-			@RequestParam(value = "dateline", required = false, defaultValue="null") String dateline,
 			@RequestParam(value = "actualy_finish", required = false, defaultValue="null") String actualy_finish,
 			@RequestParam(value = "return_content", required = false, defaultValue="null") String return_content,
 			@RequestParam(value = "return_content_private", required = false, defaultValue="null") String return_content_private,
 			@RequestParam(value = "dic_cause_id", required = false, defaultValue="null") String dic_cause_id,
 			@RequestParam(value = "dic_cause_id_private", required = false, defaultValue="null") String dic_cause_id_private,
 			@RequestParam(value = "file_id", required = false, defaultValue="null") String file_id) throws Exception {
-		return service.responseRequest(ticketid, fw_dep_code, fw_user, fw_date, fw_content, receiving_date, receiving_dep_code, receiving_user, dateline, actualy_finish,return_content,return_content_private,dic_cause_id,dic_cause_id_private,file_id);
+		return service.responseRequest(ticketid, fw_dep_code, fw_user, fw_content, receiving_date, receiving_dep_code, receiving_user, actualy_finish,return_content,return_content_private,dic_cause_id,dic_cause_id_private,file_id);
 	}
 	
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
