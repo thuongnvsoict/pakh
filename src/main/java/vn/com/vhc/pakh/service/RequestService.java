@@ -19,12 +19,19 @@ public class RequestService extends MasterService {
 			String systemCode, String isHas, String username)
 			throws SQLException {
 		ResultSet data = null;
-		String sql = "select * from request_type join users_req on request_type.id = users_req.req_id where "
-				+ " request_type.DEP_CODE = ? and request_type.SYSTEM_CODE = ? and users_req.username = ? ";
-		if (isHas.equals("null"))
-			sql += " and request_type.IS_HAS IS NULL";
-		else
-			sql += " and request_type.IS_HAS = ?";
+		String sql = "";
+		if (isHas.equals("null")) {
+			sql = "select * from request_type join users_req on request_type.id = users_req.req_id where "
+					+ " request_type.DEP_CODE = ? and request_type.SYSTEM_CODE = ? and users_req.username = ?"
+					+ " and request_type.IS_HAS IS NULL";
+			
+		}
+		else {
+			sql = "select * from request_type where "
+					+ " request_type.DEP_CODE = ? and request_type.SYSTEM_CODE = ?"
+					+ " and request_type.IS_HAS = ?";
+		}
+			
 		PreparedStatement ps = connection.prepareStatement(sql);
 		// Set parameter
 		String temp = null;
@@ -38,14 +45,15 @@ public class RequestService extends MasterService {
 		else
 			ps.setString(2, systemCode);
 		//---------------------------------------
-		if (username.equals("null"))
-			ps.setString(3, temp);
-		else
-			ps.setString(3, username);
-		// ---------------------------------------
-		if (!isHas.equals("null"))
-			ps.setInt(4, Integer.parseInt(isHas));
-		// ---------------------------------------
+		if (isHas.equals("null")) {
+			if (username.equals("null"))
+				ps.setString(3, temp);
+			else
+				ps.setString(3, username);
+		}else {
+			ps.setInt(3, Integer.parseInt(isHas));
+		}
+		
 		data = ps.executeQuery();
 		List<RequestType> list = new ArrayList<RequestType>();
 		while (data.next()) {
@@ -63,7 +71,7 @@ public class RequestService extends MasterService {
 	}
 
 	public String postRequest(String req_dep_code, String req_user, String req_system_code, String req_title,
-			String pro_dep_code, String req_content, String receiving_sms, String receiving_email, String fileDir,
+			String pro_dep_code, String pro_user, String req_content, String receiving_sms, String receiving_email, String fileDir,
 			String req_status) throws SQLException {
 		// Get ticketID
 		String ticketID = "";
@@ -75,8 +83,8 @@ public class RequestService extends MasterService {
 		}
 		int data;
 		sql = "insert into request(ticketid,req_date,req_dep_code, req_user, req_system_code, "
-				+ "req_title, pro_dep_code," + " req_content, receiving_sms, receiving_email, "
-				+ "file_Dir, req_status) values (?,sysdate,?,?,?,?,?,?,?,?,?,?)";
+				+ "req_title, pro_dep_code, pro_user, req_content, receiving_sms, receiving_email, "
+				+ "file_Dir, req_status) values (?,sysdate,?,?,?,?,?,?,?,?,?,?,?)";
 		ps = connection.prepareStatement(sql);
 
 		// Set parameter
@@ -100,15 +108,16 @@ public class RequestService extends MasterService {
 		// 11
 		ps.setString(5, req_title);
 		ps.setString(6, pro_dep_code);
-		ps.setString(7, req_content);
-		ps.setString(8, receiving_sms);
-		ps.setString(9, receiving_email);
+		ps.setString(7, pro_user);
+		ps.setString(8, req_content);
+		ps.setString(9, receiving_sms);
+		ps.setString(10, receiving_email);
 		if (fileDir.equals("null")) {
-			ps.setString(10, temp);
+			ps.setString(11, temp);
 		} else {
-			ps.setString(10, fileDir);
+			ps.setString(11, fileDir);
 		}
-		ps.setString(11, req_status);
+		ps.setString(12, req_status);
 
 		data = ps.executeUpdate();
 		if (data >= 1)

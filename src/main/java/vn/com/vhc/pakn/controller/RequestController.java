@@ -36,13 +36,14 @@ public class RequestController {
 			@RequestParam(value = "req_system_code", required = false, defaultValue="null") String req_system_code,
 			@RequestParam("req_title") String req_title,
 			@RequestParam("pro_dep_code") String pro_dep_code,
+			@RequestParam("pro_user") String pro_user,
 			@RequestParam("req_content") String req_content,
 			@RequestParam("receiving_sms") String receiving_sms,
 			@RequestParam("receiving_email") String receiving_email,
 			@RequestParam("file_dir") String fileDir,
 			@RequestParam("req_status") String req_status
 			) throws Exception {
-		return service.postRequest(req_dep_code, req_user, req_system_code, req_title, pro_dep_code, req_content, receiving_sms, receiving_email, fileDir, req_status);
+		return service.postRequest(req_dep_code, req_user, req_system_code, req_title, pro_dep_code, pro_user, req_content, receiving_sms, receiving_email, fileDir, req_status);
 	}
 	
 	@RequestMapping(value = "/response", method = RequestMethod.POST)

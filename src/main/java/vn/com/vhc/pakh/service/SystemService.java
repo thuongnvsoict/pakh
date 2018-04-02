@@ -8,13 +8,16 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import vn.com.vhc.pakn.model.Processor;
 import vn.com.vhc.pakn.model.SystemType;
 
 @Service
 public class SystemService extends MasterService{
 	public List<SystemType> getSystemCode(String departmentCode) {
 		ResultSet rs = null;
-		String sql = "select * from dep_system_type where dep_code = ?";
+		String sql = "select * from dep_system_type "
+				+ "join SYSTEM_TYPE on SYSTEM_TYPE.SYSTEM_CODE = dep_system_type.SYSTEM_CODE "
+				+ "where dep_system_type.dep_code = ?";
 		PreparedStatement ps;
 		List<SystemType> list = new ArrayList<SystemType>();
 		try {
@@ -24,6 +27,7 @@ public class SystemService extends MasterService{
 			while (rs.next()) {
 				SystemType sys = new SystemType();
 				sys.setSystemCode(rs.getString("SYSTEM_CODE"));
+				sys.setSystemName(rs.getString("SYSTEM_NAME"));
 				list.add(sys);
 			}
 		} catch (SQLException e) {
@@ -34,24 +38,34 @@ public class SystemService extends MasterService{
 		
 	}
 	
-	public String getProcessor(String requestID) {
+	class processor{
+		
+	}
+	
+	public Processor getProcessor(String system_code) {
+		Processor pr = new Processor();
 		ResultSet rs = null;
-		String sql = "select * from dep_req where req_id = ?";
+//		String sql = "select * from dep_req join lich_truc_ca_cntt "
+//				+ "on dep_req.dep_code = lich_truc_ca_cntt.dep_code "
+//				+ "where dep_req.req_id = ?";
+		String sql = "select pd.dep_code,ltc.USERNAME from PRO_DEP_SYSTEM_TYPE pd \n" + 
+				"join lich_truc_ca_cntt ltc\n" + 
+				"on pd.dep_code = ltc.dep_code \n" + 
+				"where pd.system_code = ?";
 		PreparedStatement ps;
-		String departmentCode = null;
 		try {
 			ps = connection.prepareStatement(sql);
-			ps.setString(1, requestID);
+			ps.setString(1, system_code);
 			rs = ps.executeQuery();
 			if (rs.next()) {
-				departmentCode = rs.getString("DEP_CODE");
+				pr.setDepartmentCode(rs.getString("dep_code"));
+				pr.setProUser(rs.getString("USERNAME")); 
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return departmentCode;
-		
+		return pr;
+
 	}
-	
-	
+		
 }

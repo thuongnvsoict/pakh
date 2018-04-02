@@ -2,14 +2,14 @@ package vn.com.vhc.pakn.model;
 
 public class SystemType {
 	private String systemCode;
+	private String systemName;
 	
-	public SystemType() {
-		super();
+	public String getSystemName() {
+		return systemName;
 	}
 
-	public SystemType(String systemCode) {
-		super();
-		this.systemCode = systemCode;
+	public void setSystemName(String systemName) {
+		this.systemName = systemName;
 	}
 
 	public String getSystemCode() {
