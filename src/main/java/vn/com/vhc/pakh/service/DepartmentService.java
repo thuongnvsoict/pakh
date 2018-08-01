@@ -16,8 +16,8 @@ public class DepartmentService extends MasterService{
 		String sql = "select * from phong_ban";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		// Set parameter
-
 		data = ps.executeQuery();
+		
 		List<Department> list = new ArrayList<Department>();
 		while (data.next()) {
 			Department dep = new Department();
@@ -26,6 +26,10 @@ public class DepartmentService extends MasterService{
 			dep.setDepartmentName(data.getString("TEN_PHONG"));
 			list.add(dep);
 		}
+		
+		data.close();
+		ps.close();
+		
 		return list;
 
 	}

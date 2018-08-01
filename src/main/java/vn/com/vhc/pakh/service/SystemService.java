@@ -18,27 +18,28 @@ public class SystemService extends MasterService{
 		String sql = "select * from dep_system_type "
 				+ "join SYSTEM_TYPE on SYSTEM_TYPE.SYSTEM_CODE = dep_system_type.SYSTEM_CODE "
 				+ "where dep_system_type.dep_code = ?";
-		PreparedStatement ps;
+		
 		List<SystemType> list = new ArrayList<SystemType>();
+		
 		try {
-			ps = connection.prepareStatement(sql);
+			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setString(1, departmentCode);
 			rs = ps.executeQuery();
+			
 			while (rs.next()) {
 				SystemType sys = new SystemType();
 				sys.setSystemCode(rs.getString("SYSTEM_CODE"));
 				sys.setSystemName(rs.getString("SYSTEM_NAME"));
 				list.add(sys);
 			}
+			
+			rs.close();
+			ps.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return list;
 		
-	}
-	
-	class processor{
+		return list;
 		
 	}
 	
@@ -52,15 +53,20 @@ public class SystemService extends MasterService{
 				"join lich_truc_ca_cntt ltc\n" + 
 				"on pd.dep_code = ltc.dep_code \n" + 
 				"where pd.system_code = ?";
-		PreparedStatement ps;
+		
 		try {
-			ps = connection.prepareStatement(sql);
+			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setString(1, system_code);
 			rs = ps.executeQuery();
+			
 			if (rs.next()) {
 				pr.setDepartmentCode(rs.getString("dep_code"));
 				pr.setProUser(rs.getString("USERNAME")); 
 			}
+			
+			rs.close();
+			ps.close();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

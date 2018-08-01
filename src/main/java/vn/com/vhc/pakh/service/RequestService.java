@@ -15,76 +15,100 @@ import vn.com.vhc.pakn.model.RequestType;
 @Service
 public class RequestService extends MasterService {
 
-	public List<RequestType> getRequestTypes(String departmentCode, 
-			String systemCode, String isHas, String username)
+	public List<RequestType> getRequestTypes(String department_code, 
+			String system_code, String is_has, String username)
 			throws SQLException {
 		ResultSet data = null;
+		
+		/*
+		 * Search Request Type level Parent
+		 * Request Parameter: departmentCode, systemCode, username, isHas = null
+		 */
+		/*
+		String sql = "select * from request_type join users_req on request_type.id = users_req.req_id where ";
+		
+		if (departmentCode == "null") {
+			sql += "request_type.DEP_CODE is ?";
+		}*/
+		//SELECT * FROM tableA WHERE x = ? OR (x IS NULL AND ? IS NULL)
 		String sql = "";
-		if (isHas.equals("null")) {
+		PreparedStatement ps = null;
+		if (is_has == null) {
+			
 			sql = "select * from request_type join users_req on request_type.id = users_req.req_id where "
-					+ " request_type.DEP_CODE = ? and request_type.SYSTEM_CODE = ? and users_req.username = ?"
+					+ " (request_type.DEP_CODE = ? OR (request_type.DEP_CODE IS NULL AND ? IS NULL))"
+					+ " and (request_type.SYSTEM_CODE = ? OR (request_type.SYSTEM_CODE IS NULL AND ? IS NULL)) "
+					+ " and users_req.username = ? "
 					+ " and request_type.IS_HAS IS NULL";
 			
+//			sql = "select * from request_type join users_req on request_type.id = users_req.req_id where "
+//					+ " (request_type.DEP_CODE = "+departmentCode+" OR (request_type.DEP_CODE IS NULL AND "+departmentCode+" IS NULL))"
+//					+ " and (request_type.SYSTEM_CODE = "+systemCode+" OR (request_type.SYSTEM_CODE IS NULL AND "+systemCode+" IS NULL)) "
+//					+ " and users_req.username = "+username+""
+//					+ " and request_type.IS_HAS IS NULL ;";
+			ps = connection.prepareStatement(sql);
+			
+			//System.out.println(department_code +" " + systemCode+"  " + username);
+			ps.setString(1, department_code);
+			ps.setString(2, department_code);
+
+			ps.setString(3, system_code);
+			ps.setString(4, system_code);
+			
+			ps.setString(5, username);
 		}
 		else {
-			sql = "select * from request_type where "
-					+ " request_type.DEP_CODE = ? and request_type.SYSTEM_CODE = ?"
+			sql = "select * from request_type join users_req on request_type.id = users_req.req_id where "
+					+ " request_type.DEP_CODE = ? OR (request_type.DEP_CODE IS NULL AND ? IS NULL)"
+					+ " and request_type.SYSTEM_CODE = ? OR (request_type.SYSTEM_CODE IS NULL AND ? IS NULL) "
 					+ " and request_type.IS_HAS = ?";
-		}
 			
-		PreparedStatement ps = connection.prepareStatement(sql);
-		// Set parameter
-		String temp = null;
-		if (departmentCode.equals("null"))
-			ps.setString(1, temp);
-		else
-			ps.setString(1, departmentCode);
-		//---------------------------------------
-		if (systemCode.equals("null"))
-			ps.setString(2, temp);
-		else
-			ps.setString(2, systemCode);
-		//---------------------------------------
-		if (isHas.equals("null")) {
-			if (username.equals("null"))
-				ps.setString(3, temp);
-			else
-				ps.setString(3, username);
-		}else {
-			ps.setInt(3, Integer.parseInt(isHas));
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, department_code);
+			ps.setString(2, department_code);
+			ps.setString(3, system_code);
+			ps.setString(4, system_code);
+			ps.setInt(5, Integer.parseInt(is_has));
+			
 		}
 		
 		data = ps.executeQuery();
+		
 		List<RequestType> list = new ArrayList<RequestType>();
 		while (data.next()) {
 			RequestType req = new RequestType();
 			req.setId(data.getString("ID"));
-			req.setRequestCode(data.getString("REQ_CODE"));
-			req.setRequestName(data.getString("REQ_NAME"));
-			req.setIsEnable(data.getString("IS_ENABLE"));
-			req.setIsStatus(data.getString("IS_STATUS"));
-			req.setDepartmentCode(data.getString("DEP_CODE"));
+			req.setRequest_code(data.getString("REQ_CODE"));
+			req.setRequest_name(data.getString("REQ_NAME"));
+			req.setIs_enable(data.getString("IS_ENABLE"));
+			req.setIs_status(data.getString("IS_STATUS"));
+			req.setDepartment_code(data.getString("DEP_CODE"));
 			list.add(req);
 		}
+		
+		data.close();
+		ps.close();
+		
 		return list;
 
 	}
 
 	public String postRequest(String req_dep_code, String req_user, String req_system_code, String req_title,
-			String pro_dep_code, String pro_user, String req_content, String receiving_sms, String receiving_email, String fileDir,
+			String pro_dep_code, String pro_user, String req_content, String receiving_sms, String receiving_email, String file_dir,
 			String req_status) throws SQLException {
 		// Get ticketID
 		String ticketID = "";
 		String sql = "select REQUEST_SEQ.nextval from dual";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
+		
 		if (rs.next()) {
 			ticketID = rs.getString("NEXTVAL");
 		}
 		int data;
 		sql = "insert into request(ticketid,req_date,req_dep_code, req_user, req_system_code, "
 				+ "req_title, pro_dep_code, pro_user, req_content, receiving_sms, receiving_email, "
-				+ "file_Dir, req_status) values (?,sysdate,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "file_dir, req_status) values (?,sysdate,?,?,?,?,?,?,?,?,?,?,?)";
 		ps = connection.prepareStatement(sql);
 
 		// Set parameter
@@ -105,21 +129,28 @@ public class RequestService extends MasterService {
 			ps.setString(4, temp);
 		else
 			ps.setString(4, req_system_code);
-		// 11
+		
+		// required
 		ps.setString(5, req_title);
 		ps.setString(6, pro_dep_code);
 		ps.setString(7, pro_user);
 		ps.setString(8, req_content);
 		ps.setString(9, receiving_sms);
 		ps.setString(10, receiving_email);
-		if (fileDir.equals("null")) {
+		
+		if (file_dir.equals("null")) {
 			ps.setString(11, temp);
 		} else {
-			ps.setString(11, fileDir);
+			ps.setString(11, file_dir);
 		}
+		
 		ps.setString(12, req_status);
 
 		data = ps.executeUpdate();
+		
+		rs.close();
+		ps.close();
+		
 		if (data >= 1)
 			return "true";
 		else
@@ -218,6 +249,9 @@ public class RequestService extends MasterService {
 
 		// Execute Update
 		data = ps.executeUpdate();
+		
+		ps.close();
+		
 		if (data >= 1)
 			return "true";
 		else
@@ -277,6 +311,10 @@ public class RequestService extends MasterService {
 
 			list.add(req);
 		}
+		
+		data.close();
+		ps.close();
+		
 		return list;
 
 	}
@@ -289,12 +327,16 @@ public class RequestService extends MasterService {
 		ps.setString(1, status);
 
 		data = ps.executeQuery();
+		
 		int count = 0;
 		while (data.next()) {
 			count++;
 		}
+		
+		data.close();
+		ps.close();
+		
 		return count;
-
 	}
 
 	public RequestDetail getRecentRequestDetail(String ticketid) throws SQLException {
@@ -304,8 +346,10 @@ public class RequestService extends MasterService {
 		// Set parameter
 		ps.setString(1, ticketid);
 		data = ps.executeQuery();
+			
 		RequestDetail req = new RequestDetail();
-
+		
+		int flag = 0;
 		if (data.next()) {
 			req.setId(data.getString("ID"));
 			req.setTicketid(data.getString("ticketid"));
@@ -324,10 +368,19 @@ public class RequestService extends MasterService {
 			req.setDic_cause_id(data.getString("dic_cause_id"));
 			req.setDic_cause_id_private(data.getString("dic_cause_id_private"));
 			req.setFile_id(data.getString("file_id"));
+			flag = 1;
+		}
+		
+		data.close();
+		ps.close();
+		
+		if (flag == 1) {
 			return req;
-		} else {
+		}else {
 			return null;
 		}
+		
+
 	}
 
 	// API 14
@@ -347,7 +400,8 @@ public class RequestService extends MasterService {
 
 		// Execute Update
 		data = ps.executeUpdate();
-
+		ps.close();
+		
 		if (data >= 1)
 			return "true";
 		else
@@ -406,6 +460,8 @@ public class RequestService extends MasterService {
 		ps.setString(10, id);
 		// Execute Update
 		data = ps.executeUpdate();
+		ps.close();
+		
 		if (data >= 1)
 			return "true";
 		else

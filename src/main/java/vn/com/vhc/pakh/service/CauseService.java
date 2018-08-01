@@ -23,8 +23,10 @@ public class CauseService extends MasterService{
 		else {
 			return null;
 		}
+		
 		PreparedStatement ps = connection.prepareStatement(sql);
 		data = ps.executeQuery();
+		
 		List<Cause> list = new ArrayList<Cause>();
 		while(data.next()){
 			Cause cause = new Cause();
@@ -41,6 +43,10 @@ public class CauseService extends MasterService{
 			cause.setSystemCode(data.getString("SYSTEM_CODE"));
 			list.add(cause);
 		}
+		
+		data.close();
+		ps.close();
+		
 		return list;
 	}
 }

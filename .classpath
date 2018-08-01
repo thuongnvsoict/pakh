@@ -32,6 +32,6 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="ojdbc8.jar"/>
+	<classpathentry kind="lib" path="ojdbc7.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

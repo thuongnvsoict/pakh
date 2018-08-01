@@ -3,7 +3,7 @@ Implementation-Title: PAKH
 Implementation-Version: 0.0.1-SNAPSHOT
 Built-By: Thuong
 Implementation-Vendor-Id: vn.vhc.com.pakn
-Build-Jdk: 1.8.0_172
+Build-Jdk: 1.8.0_181
 Implementation-URL: http://projects.spring.io/spring-boot/phan-anh-kha
  ch-hang/
 Created-By: Maven Integration for Eclipse

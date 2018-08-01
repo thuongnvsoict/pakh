@@ -84,9 +84,10 @@ public class LDAP {
         }
         return false;
     }
-	
+	/*
 	public static void main(String arg[]) throws NamingException {
 		System.out.println(authentication("pakh.tctk", "ktdh12345"));
 		//System.out.println(authentication("HONG.NT", "mobifone@2017"));
 	}
+	*/
 }

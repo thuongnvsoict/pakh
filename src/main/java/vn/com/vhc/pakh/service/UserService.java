@@ -34,8 +34,9 @@ public class UserService extends MasterService{
 		ps.setString(1, username.toUpperCase());
 		data = ps.executeQuery();
 		
+		User user = null;
 		if(data.next()){
-			User user = new User();
+			user = new User();
 			user.setId(data.getString("ID"));
 			user.setUsername(data.getString("username"));
 			user.setPassword(data.getString("password"));
@@ -46,10 +47,17 @@ public class UserService extends MasterService{
 			user.setPosition(data.getString("position"));
 			user.setIsEnable(data.getString("is_enable"));
 			user.setDepartmentCode(data.getString("MA_PHONG"));
-			return user;
-		}else {
-			return null;
 		}
+		
+		data.close();
+		ps.close();
+		
+		if (user == null) {
+			return null;
+		}else {
+			return user;
+		}
+		
 		
 	}
 	
@@ -59,7 +67,9 @@ public class UserService extends MasterService{
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setString(1, dep_code);
 		data = ps.executeQuery();
+		
 		List<User> list = new ArrayList<User>();
+		
 		while(data.next()){
 			User user = new User();
 			user.setId(data.getString("ID"));
@@ -74,6 +84,10 @@ public class UserService extends MasterService{
 			user.setDepartmentCode(data.getString("MA_PHONG"));
 			list.add(user);
 		}
+		
+		data.close();
+		ps.close();
+		
 		return list;
 		
 	}
@@ -83,11 +97,15 @@ public class UserService extends MasterService{
 		String sql = "select * from users where upper(username) = ?";
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setString(1, username.toUpperCase());
-		data = ps.executeQuery();
-		String passwordMD5 = generateMD5(password);
 		
+		data = ps.executeQuery();
+		
+		String passwordMD5 = generateMD5(password);
+		User user = null;
+		
+		int flag = 0;
 		if(data.next()){
-			User user = new User();
+			user = new User();
 			user.setId(data.getString("ID"));
 			user.setUsername(data.getString("username"));
 			user.setPassword(data.getString("password"));
@@ -100,19 +118,30 @@ public class UserService extends MasterService{
 			user.setDepartmentCode(data.getString("MA_PHONG"));
 			
 			if (user.getPassword().equals(passwordMD5)) {
-				return user;
+
+				flag = 1;
 			}else {
 				System.out.println("This is LDAP password");
 				boolean existUser = LDAP.authentication(username+"@mobifone.vn", password);
 				if (existUser == true) {
-					return user;
+					flag = 1; 
 				}else {
-					return null;
+					flag = 0;
 				}
 			}
 		}else {
-			return null;
+			flag = 0;
 		}
+		
+		data.close();
+		ps.close();
+		
+		if (flag == 0) {
+			return null;
+		}else {
+			return user;
+		}
+
 		
 	}
 	

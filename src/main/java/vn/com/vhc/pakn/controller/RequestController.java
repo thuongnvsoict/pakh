@@ -21,12 +21,12 @@ public class RequestController {
 	
 	@RequestMapping(value = "/type", method = RequestMethod.GET)
 	public List<RequestType> getRequestTypes(
-			@RequestParam(value = "departmentCode", required = false, defaultValue="null") String departmentCode,
-			@RequestParam(value = "systemCode", required = false, defaultValue="null") String systemCode,
-			@RequestParam(value = "isHas", required = false, defaultValue="null") String isHas,
-			@RequestParam(value = "username", required = false, defaultValue="null") String username
+			@RequestParam(value = "department_code", required = false) String department_code,
+			@RequestParam(value = "system_code", required = false) String system_code,
+			@RequestParam(value = "is_has", required = false) String is_has,
+			@RequestParam(value = "username", required = false) String username
 			) throws Exception {
-		return service.getRequestTypes(departmentCode, systemCode, isHas, username);
+		return service.getRequestTypes(department_code, system_code, is_has, username);
 	}
 
 	@RequestMapping(value = "/post", method = RequestMethod.POST)
@@ -34,16 +34,16 @@ public class RequestController {
 			@RequestParam(value = "req_dep_code", required = false, defaultValue="null") String req_dep_code,
 			@RequestParam(value = "req_user", required = false, defaultValue="null") String req_user,
 			@RequestParam(value = "req_system_code", required = false, defaultValue="null") String req_system_code,
-			@RequestParam("req_title") String req_title,
-			@RequestParam("pro_dep_code") String pro_dep_code,
-			@RequestParam("pro_user") String pro_user,
-			@RequestParam("req_content") String req_content,
-			@RequestParam("receiving_sms") String receiving_sms,
-			@RequestParam("receiving_email") String receiving_email,
-			@RequestParam("file_dir") String fileDir,
-			@RequestParam("req_status") String req_status
+			@RequestParam(value = "req_title", required = true) String req_title,
+			@RequestParam(value = "pro_dep_code", required = true) String pro_dep_code,
+			@RequestParam(value = "pro_user", required = true) String pro_user,
+			@RequestParam(value = "req_content", required = true) String req_content,
+			@RequestParam(value = "receiving_sms", required = true) String receiving_sms,
+			@RequestParam(value = "receiving_email", required = true) String receiving_email,
+			@RequestParam(value = "file_dir", required = false, defaultValue="null") String file_dir,
+			@RequestParam(value = "req_status", required = true) String req_status
 			) throws Exception {
-		return service.postRequest(req_dep_code, req_user, req_system_code, req_title, pro_dep_code, pro_user, req_content, receiving_sms, receiving_email, fileDir, req_status);
+		return service.postRequest(req_dep_code, req_user, req_system_code, req_title, pro_dep_code, pro_user, req_content, receiving_sms, receiving_email, file_dir, req_status);
 	}
 	
 	@RequestMapping(value = "/response", method = RequestMethod.POST)
@@ -75,8 +75,8 @@ public class RequestController {
 			@RequestParam(value = "ticketid", required = false, defaultValue="%%") String ticketid,
 			@RequestParam(value = "req_status", required = false, defaultValue="%%") String req_status,
 			//Ngay gui yeu cau
-			@RequestParam(value = "start_req_date", required = false, defaultValue="%%") String start_req_date,
-			@RequestParam(value = "end_req_date", required = false, defaultValue="%%") String end_req_date
+			@RequestParam(value = "start_req_date", required = true) String start_req_date,
+			@RequestParam(value = "end_req_date", required = true) String end_req_date
 			) throws Exception {
 		return service.getRequest(req_title, req_system_code, req_dep_code, req_user, pro_dep_code, pro_user, ticketid, req_status, start_req_date, end_req_date);
 	}

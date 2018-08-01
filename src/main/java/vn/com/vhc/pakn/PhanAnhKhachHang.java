@@ -35,6 +35,7 @@ public class PhanAnhKhachHang implements CommandLineRunner{
         	e.printStackTrace();
         	System.out.println("Where is your Oracle JDBC Driver?"); 
         }
+		System.setProperty("java.security.egd", "file:///dev/urandom");
 		MasterService.connection = null;
         try {
         	UserService.connection = DriverManager.getConnection(
