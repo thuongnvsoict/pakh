@@ -4,7 +4,8 @@
 #userdb: cntt_test
 #password: cntt123
 
-address: 14.160.91.174
+#address: 14.160.91.174
+address: 192.168.1.226
 port: 1521
 sid: vhc
 #userdb: fb_owner
